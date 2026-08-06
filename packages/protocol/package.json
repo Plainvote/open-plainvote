@@ -1,0 +1,22 @@
+{
+  "name": "@votechain/protocol",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Isomorphic VoteChain protocol core: canonical encoding, crypto, transactions, validation, tally",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/blindrsa-ts": "0.4.6",
+    "@noble/curves": "2.2.0",
+    "@noble/hashes": "2.2.0"
+  }
+}

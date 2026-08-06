@@ -1,0 +1,27 @@
+{
+  "name": "@votechain/results-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "VoteChain public results app: live tallies, block explorer, receipt verification",
+  "scripts": {
+    "dev": "vite --strictPort",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@plainvote/theme": "*",
+    "@plainvote/ui": "*",
+    "@votechain/protocol": "*",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.2.0",
+    "vite": "7.3.6"
+  }
+}

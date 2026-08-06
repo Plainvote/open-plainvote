@@ -1,0 +1,28 @@
+/*
+ * Commission-app extras only. Tokens and shared components come from
+ * @plainvote/theme (imported in main.tsx, before this file).
+ */
+
+.tab-nav { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 24px; }
+.tab-nav button {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.tab-nav button:hover { color: var(--accent); }
+.tab-nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+fieldset.bare { border: 0; padding: 0; margin: 0; min-inline-size: auto; }
+.check { display: flex; gap: 8px; align-items: center; font-weight: 600; margin: 14px 0 4px; }
+.check input { width: auto; accent-color: var(--accent); }
+.question-card { background: var(--surface-2); box-shadow: none; margin-top: 12px; }
+.actions-cell { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+details.advanced summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+.code-list { max-height: 260px; overflow: auto; }

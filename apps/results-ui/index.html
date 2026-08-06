@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="color-scheme" content="light" />
+    <title>Plainvote — Public Results</title>
+    <!--
+      This app is deliberately the indexable, shareable one: it is where a
+      board circulates a result and where a sceptic is sent. It had no
+      description and no preview at all, so a link posted anywhere rendered as
+      a bare URL. Per-route titles are set by the app; these are the defaults
+      that apply before it boots and to any crawler that does not run it.
+    -->
+    <meta
+      name="description"
+      content="Published election results anyone can recount. Every ballot is public, signed and anonymous, so the totals can be checked independently rather than taken on trust."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Plainvote" />
+    <meta property="og:title" content="Election results anyone can recount" />
+    <meta
+      property="og:description"
+      content="Every ballot is published in full, signed and anonymous. Add them up yourself and get the same answer."
+    />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

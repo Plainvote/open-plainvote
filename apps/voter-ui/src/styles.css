@@ -1,0 +1,192 @@
+/*
+ * Voter-app extras only. Tokens and shared components come from
+ * @plainvote/theme (imported in main.tsx, before this file).
+ */
+
+/* Progress drawn as the tally mark itself: one stroke per step, and the
+   fifth stroke across them only once the ballot is recorded. */
+.tally-progress { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.tally-progress svg { flex: none; overflow: visible; }
+.tally-progress .tally-on { stroke: var(--accent); transition: stroke var(--dur-slow) var(--ease); }
+.tally-progress .tally-off { stroke: var(--border-strong); transition: stroke var(--dur-slow) var(--ease); }
+.tally-label { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tally-step {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tally-now {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+/* Ballot option rows: radio cards a thumb can hit. */
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 13px 15px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.option:hover { border-color: var(--accent); }
+.option.selected { border-color: var(--accent); background: var(--accent-soft); }
+.option input { margin-top: 4px; }
+
+/* An election row: one button spanning the whole row, so a thumb anywhere on
+   it opens the ballot and a keyboard reaches it like any other control. */
+.option-row {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+}
+.option-row .option-body { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.option-row .option-go {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.option-row:hover .option-go { color: var(--accent-strong); }
+
+/* The review sheet: what is about to be recorded, before it is. */
+.review { margin: 14px 0 0; display: flex; flex-direction: column; gap: 0; }
+.review-row { border-top: 1px solid var(--border); padding: 14px 0; }
+.review-row:first-child { border-top: none; padding-top: 4px; }
+.review-row dt { font-size: 0.95rem; color: var(--muted); margin-bottom: 8px; line-height: 1.45; }
+.review-row dd {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.review-answer {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.08rem;
+  letter-spacing: -0.01em;
+}
+/* An unanswered question is a deliberate choice, not an error: stated plainly
+   rather than flagged, since a partial ballot is legal. */
+.review-answer.none { font-weight: 500; color: var(--muted); font-style: italic; }
+
+/* Where the ballot has got to: one journey, three stops. */
+.track { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.track li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--muted);
+  position: relative;
+}
+/* The rail linking the stops, drawn behind the marks. */
+.track li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 30px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--border);
+}
+.track li.done { color: var(--text); }
+.track li.doing { color: var(--text); }
+.track .track-mark {
+  flex: none;
+  width: 21px;
+  height: 21px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font: 600 11px/1 var(--font-sans);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--muted);
+  z-index: 1;
+}
+.track li.done .track-mark { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.track li.doing .track-mark { border-color: var(--accent); color: var(--accent); }
+.track li.stuck { color: var(--warn); }
+.track li.stuck .track-mark { border-color: var(--warn); color: var(--warn); }
+
+/* What each record-keeper says it holds. One saying "recorded" is a promise;
+   several saying it independently is why the ballot is hard to lose. */
+.keepers { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.keeper-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.92rem;
+}
+.keeper-who { font-weight: 600; }
+.keeper-what {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+.keeper-line.has .keeper-what { color: var(--ok); }
+.keeper-line.not-yet .keeper-what { color: var(--warn); }
+
+/* The mechanism, available but folded away. */
+.explainer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.explainer summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-height: 44px;
+}
+.explainer summary::-webkit-details-marker { display: none; }
+.explainer summary::after { content: '+'; color: var(--accent); font-size: 1.3rem; line-height: 1; }
+.explainer[open] summary::after { content: '\2013'; }
+.explainer[open] summary { border-bottom: 1px solid var(--border); }
+.explainer-body { padding: 12px 0 16px; display: flex; flex-direction: column; gap: 10px; font-size: 0.95rem; line-height: 1.6; color: var(--muted); }
+.explainer-body p { margin: 0; }
+
+/* Return-code (cast-as-intended) verification panel. */
+.return-code {
+  font-family: var(--font-mono);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.return-code-answer { border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 10px; }
+.return-code-answer:first-child { border-top: none; padding-top: 0; margin-top: 0; }

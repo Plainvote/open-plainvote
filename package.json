@@ -1,0 +1,40 @@
+{
+  "name": "open-plainvote",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Plainvote engine: open-source anonymous voting with a publicly recountable record",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "tests/e2e"
+  ],
+  "scripts": {
+    "setup": "tsx scripts/setup.ts",
+    "demo": "tsx scripts/demo.ts",
+    "demo:reset": "tsx scripts/setup.ts --force",
+    "audit:record": "tsx scripts/audit.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev:node1": "tsx packages/node/src/main.ts --config .data/node1/config.json",
+    "dev:node2": "tsx packages/node/src/main.ts --config .data/node2/config.json",
+    "dev:node3": "tsx packages/node/src/main.ts --config .data/node3/config.json",
+    "dev:registrar": "tsx packages/registrar/src/main.ts --config .data/registrar/config.json",
+    "dev:console": "tsx packages/console/src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.2",
+    "concurrently": "10.0.3",
+    "tsx": "4.22.4",
+    "typescript": "5.9.3",
+    "vitest": "4.1.9"
+  },
+  "overrides": {
+    "vite": "7.3.6"
+  }
+}

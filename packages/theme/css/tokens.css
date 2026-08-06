@@ -1,0 +1,102 @@
+/*
+ * Plainvote design tokens — CSS mirror of src/tokens.ts.
+ *
+ * DO NOT edit values here without editing src/tokens.ts: the parity test
+ * (test/tokens-parity.test.ts) fails on any drift between the two. The TS
+ * module is the source of truth; this file exists so the Vite apps can consume
+ * tokens without a build step.
+ */
+
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+
+:root {
+  --bg: #F7F8F6;
+  --surface: #FFFFFF;
+  --surface-2: #F1F3F0;
+  --text: #14201B;
+  --muted: #5A6B63;
+  --border: #E2E7E3;
+  --border-strong: #CBD4CE;
+  --accent: #0E6B53;
+  --on-accent: #FFFFFF;
+  --accent-strong: #0A523F;
+  --accent-soft: #E3EFEA;
+  --ok: #15803D;
+  --ok-soft: #E4F3E9;
+  --warn: #B45309;
+  --warn-soft: #FAEEDD;
+  --danger: #B91C1C;
+  --danger-soft: #FCE9E8;
+  --info: #3B6B8F;
+  --info-soft: #E9F0F4;
+  --ring: #0E6B53;
+
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, monospace;
+
+  --radius-s: 7px;
+  --radius-m: 10px;
+  --radius-l: 14px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --measure: 68ch;
+
+  --shadow-1: 0 1px 2px rgba(20, 32, 27, 0.05);
+  --shadow-2: 0 1px 2px rgba(20, 32, 27, 0.04), 0 12px 32px -16px rgba(20, 32, 27, 0.18);
+
+  --dur-fast: 140ms;
+  --dur-slow: 240ms;
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/*
+ * The ink scope: the dark half of the palette as COMPOSITION, not a mode.
+ * Matching the landing page, the apps are fixed ink-and-paper: the chrome
+ * (header, footer) is ink, the working surface is paper, for everyone
+ * regardless of OS preference. Elements inside these scopes read the same
+ * custom properties and just work.
+ */
+.inked,
+.app-header,
+.app-footer {
+    --bg: #0C1210;
+    --surface: #121A16;
+    --surface-2: #18231E;
+    --text: #E7EDE9;
+    --muted: #93A39B;
+    --border: #24302A;
+    --border-strong: #33443C;
+    --accent: #2FB98B;
+    --on-accent: #06231B;
+    --accent-strong: #4ACCA0;
+    --accent-soft: #16302A;
+    --ok: #4ADE80;
+    --ok-soft: #16281E;
+    --warn: #F5A952;
+    --warn-soft: #2A2214;
+    --danger: #F87171;
+    --danger-soft: #2C1A18;
+    --info: #7FB2D9;
+    --info-soft: #16211C;
+    --ring: #2FB98B;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.35), 0 16px 36px -18px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-slow: 0ms;
+  }
+}

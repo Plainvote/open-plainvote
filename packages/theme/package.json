@@ -1,0 +1,23 @@
+{
+  "name": "@plainvote/theme",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Plainvote design tokens and shared component styles: one theme, every surface",
+  "exports": {
+    "./tokens": {
+      "types": "./src/tokens.ts",
+      "default": "./src/tokens.ts"
+    },
+    "./tokens.css": "./css/tokens.css",
+    "./components.css": "./css/components.css"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.2.8",
+    "@fontsource-variable/space-grotesk": "5.2.8"
+  }
+}

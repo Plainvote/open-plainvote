@@ -1,0 +1,26 @@
+{
+  "name": "@votechain/node",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "VoteChain proof-of-authority blockchain node: consensus, p2p gossip, REST/WS API",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "11.2.0",
+    "@votechain/protocol": "*",
+    "fastify": "5.9.0",
+    "ws": "8.21.0"
+  },
+  "devDependencies": {
+    "@types/ws": "8.18.1"
+  }
+}

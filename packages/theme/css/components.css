@@ -1,0 +1,664 @@
+/*
+ * Plainvote shared components — one stylesheet for every app surface.
+ *
+ * ~20 class families, deliberately not a framework: these are exactly the
+ * classes the apps already use (the two old baselines converged on the same
+ * names), restyled once. App styles.css files hold only genuinely app-specific
+ * extras and must not redeclare anything here.
+ */
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+/*
+ * 16px, not 15px, and the second reason matters more than the first.
+ *
+ * Readability on a phone is the obvious one. The load-bearing one: the form
+ * controls below are `font: inherit`, and iOS Safari zooms the whole page when
+ * a focused field is under 16px. At 15px that fired on the voter-code field,
+ * the very first thing anyone touches. Do not take this back to 15px without
+ * giving the inputs their own size.
+ */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 var(--font-sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+main.container { padding-bottom: var(--space-8); }
+
+/*
+ * Page openers.
+ *
+ * Every app page used to title itself with a `.card > h2` at 16.5px, the same
+ * size as the heading of any card inside it, so no screen had a visible top of
+ * the hierarchy. (The document `h1` is the wordmark in the chrome.) `.page-head`
+ * gives a page one confident title in the display face, at the site's scale.
+ */
+.page-head { margin: 0 0 var(--space-5); }
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(23px, 3.4vw, 31px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+.page-lead {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: 16.5px;
+  line-height: 1.55;
+  max-width: var(--measure);
+}
+.measure { max-width: var(--measure); }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover { color: var(--accent-strong); }
+
+::selection { background: var(--accent-soft); }
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* -- assistive ---------------------------------------------------------------
+ *
+ * Content for people not looking at the screen, and a way past the chrome for
+ * people who cannot skip it with their eyes.
+ */
+
+/* Present to a screen reader, absent to everyone else. Not `display: none`,
+   which would remove it from the accessibility tree along with the layout. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hidden until focused, then the first thing a keyboard reaches. Without it,
+   every route means tabbing through the whole header again. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 50;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 10px 16px;
+  border-radius: var(--radius-m);
+  font: 600 14px/1 var(--font-sans);
+  text-decoration: none;
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus { top: 12px; color: var(--on-accent); }
+
+/* The landmark receives focus on a route change, and must not draw a ring for
+   mouse users who never asked for it. */
+main:focus { outline: none; }
+
+/* -- chrome ---------------------------------------------------------------- */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  margin-bottom: 28px;
+}
+.app-header .container { display: flex; align-items: center; gap: 14px; }
+/*
+ * The wordmark is chrome, not the title of anything.
+ *
+ * It used to be the document's `h1`, which left every page with no title
+ * element at all and its real heading as one of several sibling `h2`s. Apps
+ * that have moved their page title to `h1` mark the wordmark `.wordmark`
+ * instead; the `h1` selector stays for the surfaces that have not.
+ */
+.app-header h1,
+.app-header .wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-size: 17px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.app-header h1 svg,
+.app-header .wordmark svg { color: var(--accent); flex: none; }
+.app-header h1 a,
+.app-header .wordmark a { color: inherit; text-decoration: none; }
+.app-header .tagline { font-size: 12.5px; color: var(--muted); }
+.app-header .spacer { flex: 1; }
+.app-header .who { font-size: 13px; color: var(--muted); }
+
+/*
+ * The organization's identity, ahead of ours.
+ *
+ * A credit-union member has never heard of Plainvote; they have heard of their
+ * credit union. So the org leads and we endorse underneath. `.brand-lockup`
+ * degrades to a plain Plainvote wordmark when a customer supplies no name or
+ * mark, so the same markup serves both cases.
+ */
+.brand-lockup { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-lockup .org-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-s);
+  flex: none;
+  object-fit: contain;
+  background: var(--surface-2);
+}
+/* Fallback when the org has a name but no logo: its initials, set like a seal. */
+.brand-lockup .org-mark.initials {
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 700 12px/1 var(--font-sans);
+  letter-spacing: 0.02em;
+  background-image: none;
+}
+.brand-lockup .names { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.brand-lockup .org-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.brand-lockup .by-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.brand-lockup .by-line svg { color: var(--accent); flex: none; }
+
+.top-nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.top-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: var(--radius-s);
+  transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.top-nav a:hover { color: var(--text); background: var(--surface-2); }
+.top-nav a.active { color: var(--accent); background: var(--accent-soft); }
+
+.app-footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  margin: 44px 0 0;
+  padding: 26px 0 36px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* -- surfaces -------------------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+.card > h2 { font-size: 16.5px; margin: 0 0 4px; }
+.card > h3, .card h3 { font-size: 14px; margin: 20px 0 6px; }
+.card > p:first-of-type { margin-top: 0; }
+
+/* -- buttons --------------------------------------------------------------- */
+
+.btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font: 600 14px/1 var(--font-sans);
+  letter-spacing: 0.005em;
+  padding: 10px 18px;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+.btn:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
+.btn:active { transform: translateY(1px); }
+.btn.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.btn.secondary:hover { background: var(--surface-2); border-color: var(--border-strong); color: var(--text); }
+.btn.ghost { background: transparent; color: var(--text); border-color: transparent; }
+.btn.ghost:hover { background: var(--surface-2); color: var(--text); }
+.btn.danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
+}
+.btn.danger:hover { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+.btn.small { padding: 6px 12px; font-size: 13px; border-radius: var(--radius-s); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* -- notices --------------------------------------------------------------- */
+
+.notice {
+  border-radius: var(--radius-m);
+  padding: 11px 14px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin: 12px 0 0;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.notice.ok { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 30%, var(--border)); }
+.notice.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 32%, var(--border)); }
+.notice.danger {
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 32%, var(--border));
+  color: var(--danger);
+}
+.notice.info { background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 28%, var(--border)); }
+
+/* -- chips ----------------------------------------------------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 11px/1 var(--font-sans);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.chip.live, .chip.open, .chip.sent, .chip.ok {
+  background: var(--ok-soft);
+  border-color: color-mix(in srgb, var(--ok) 35%, transparent);
+  color: var(--ok);
+}
+.chip.draft, .chip.pending, .chip.upcoming, .chip.info {
+  background: var(--info-soft);
+  border-color: color-mix(in srgb, var(--info) 30%, transparent);
+  color: var(--info);
+}
+.chip.failed, .chip.bounced, .chip.cancelled, .chip.danger {
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 32%, transparent);
+  color: var(--danger);
+}
+.chip.closed, .chip.superseded, .chip.warn {
+  background: var(--warn-soft);
+  border-color: color-mix(in srgb, var(--warn) 35%, transparent);
+  color: var(--warn);
+}
+
+/* -- forms ------------------------------------------------------------------ */
+
+label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+label.check { display: flex; align-items: center; gap: 8px; font-weight: 450; cursor: pointer; }
+label.check input { margin: 0; accent-color: var(--accent); }
+
+input[type='text'], input[type='email'], input[type='number'], input[type='password'],
+input[type='datetime-local'], input[type='file'], select, textarea {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-m);
+  padding: 9px 12px;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 22%, transparent);
+}
+input[type='radio'] { accent-color: var(--accent); }
+textarea { resize: vertical; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; line-height: 1.55; }
+
+.count-input { width: 110px; }
+.flex-input { flex: 1; min-width: 180px; }
+
+/* -- tables ----------------------------------------------------------------- */
+
+.table-scroll { overflow-x: auto; margin: 10px -4px 0; padding: 0 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 600;
+  background: transparent;
+}
+tbody tr { transition: background var(--dur-fast) var(--ease); }
+tbody tr:hover { background: var(--surface-2); }
+
+/* -- steps indicator --------------------------------------------------------- */
+
+.steps { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.steps .step { display: inline-flex; align-items: center; gap: 7px; }
+.steps .step .dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  font: 600 11px/1 var(--font-sans);
+  transition: all var(--dur-slow) var(--ease);
+}
+.steps .step.active { color: var(--text); font-weight: 600; }
+.steps .step.active .dot { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.steps .step.done { color: var(--accent); }
+.steps .step.done .dot { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+/* -- data display ------------------------------------------------------------ */
+
+.mono, code { font-family: var(--font-mono); font-size: 0.92em; }
+code {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 6px;
+  word-break: break-all;
+}
+.mono-block, .code-list {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 12px 14px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Large one-time secrets: voting codes, tokens. */
+.code-display {
+  font: 600 clamp(19px, 5vw, 26px)/1.4 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 18px 16px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+  border-radius: var(--radius-m);
+  word-break: break-all;
+}
+
+.stat-number { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.price { font-family: var(--font-display); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; }
+
+/* -- editorial devices, carried over from the landing page --------------------
+ *
+ * The site has a visual language the apps never adopted, which is most of why
+ * the product reads as a different company. These are those devices, available
+ * to any app surface. All additive: nothing here restyles an existing class.
+ */
+
+/* Section opener: mono eyebrow, double rule above, hairline out to the margin. */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  border-top: 3px double var(--border-strong);
+  padding-top: var(--space-4);
+}
+.kicker .line { height: 1px; background: var(--border-strong); flex: 1; }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.eyebrow svg { flex: none; }
+
+/*
+ * Record-style block: a rule and a label, not a box. The card is the right
+ * container for something you act on; this is the right one for something you
+ * read, and it keeps a page of them from reading as a stack of tiles.
+ */
+.lblock { border-top: 2px solid var(--accent); padding-top: var(--space-4); }
+.lblock .tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-2);
+}
+.lblock h3 { margin: 0 0 var(--space-2); font-size: 17px; }
+
+/*
+ * The wax seal. Deliberately the one element on any page allowed to sit off
+ * the grid: a straight stamp reads as a badge, a crooked one reads as something
+ * a person pressed onto the page.
+ */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 6px;
+  padding: 5px 9px;
+  background: color-mix(in srgb, var(--accent-soft) 60%, transparent);
+  transform: rotate(-3deg);
+  white-space: nowrap;
+}
+.stamp svg { flex: none; }
+
+/*
+ * Public arithmetic as display type: ballots <= credentials issued <= eligible.
+ * The numbers are the argument, so they are set like an argument rather than
+ * squeezed into three stat tiles.
+ */
+.ineq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45em;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(17px, 3.4vw, 26px);
+  line-height: 1.3;
+  margin: var(--space-2) 0;
+}
+.ineq b { color: var(--accent); font-weight: 600; }
+.ineq i { color: var(--muted); font-style: normal; }
+.ineq .lbl {
+  font-family: var(--font-sans);
+  font-size: 0.5em;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Ledger paper: faint ruled baselines. Skip it behind dense data, where it
+ * reads as interference rather than texture. */
+.ruled { position: relative; }
+.ruled::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 35px,
+    color-mix(in srgb, var(--border) 55%, transparent) 35px 36px
+  );
+}
+.ruled > * { position: relative; }
+
+/* -- loading ----------------------------------------------------------------- */
+
+.skeleton {
+  display: inline-block;
+  border-radius: var(--radius-s);
+  background: linear-gradient(100deg, var(--surface-2) 40%, var(--border) 50%, var(--surface-2) 60%);
+  background-size: 200% 100%;
+  animation: skeleton-sheen 1.4s var(--ease) infinite;
+  color: transparent;
+  user-select: none;
+}
+@keyframes skeleton-sheen {
+  from { background-position: 130% 0; }
+  to { background-position: -30% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
+
+/* -- utilities ---------------------------------------------------------------- */
+
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.actions-row { margin-top: 16px; }
+.spread { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.grid.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* -- responsive ---------------------------------------------------------------
+ *
+ * Until this section the theme had no width-based rules at all: four apps'
+ * worth of layout rested on `flex-wrap`, which is why the public record page
+ * pushed a phone sideways and the sticky header ate a quarter of the screen.
+ *
+ * Widths repeat the literals from `breakpoints` in src/tokens.ts (media queries
+ * cannot read custom properties); test/responsive.test.ts asserts these and
+ * only these are used.
+ */
+
+/*
+ * Thumbs, not pixels: keyed to `pointer: coarse` rather than a width, so a
+ * narrow desktop window keeps its compact controls while a large tablet gets
+ * the bigger ones. `.btn.small` stops at 40px rather than 44 because it is the
+ * per-row control in the console's dense tables, where 44 would space rows out
+ * far enough to hurt scanning.
+ */
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .btn.small { min-height: 40px; padding: 8px 14px; }
+  .top-nav a { min-height: 40px; display: inline-flex; align-items: center; }
+  label.check { min-height: 40px; }
+}
+
+@media (max-width: 720px) {
+  /*
+   * The chrome was 258px tall on a 375px screen, 26% of the viewport, and
+   * sticky, so it cost that on every scroll of every page. The tagline is
+   * decorative, the wordmark can be smaller, and the nav scrolls sideways
+   * inside itself instead of wrapping onto three lines.
+   */
+  .app-header { padding: 10px 0; margin-bottom: 20px; }
+  .app-header .container { gap: 10px; }
+  .app-header h1 { font-size: 15px; }
+  .app-header h1 svg { width: 17px; height: 17px; }
+  .app-header .tagline { display: none; }
+  .top-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    min-width: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .top-nav::-webkit-scrollbar { display: none; }
+  .top-nav a { white-space: nowrap; }
+
+  .container { padding: 0 16px; }
+  .card { padding: 18px 16px; border-radius: var(--radius-m); }
+  main.container { padding-bottom: var(--space-6); }
+  .app-footer { margin-top: var(--space-6); padding: 20px 0 28px; }
+
+  /* The step rail wrapped to three lines at every step of the voter flow. */
+  .steps { gap: 8px; font-size: 12px; }
+  .steps .step .dot { width: 18px; height: 18px; font-size: 10px; }
+}
+
+@media (max-width: 560px) {
+  /*
+   * Columns a phone has no room for. Used on table cells that repeat
+   * information available elsewhere on the row, so hiding them loses nothing.
+   * !important because it has to beat the display value of whatever it is
+   * applied to, which is the whole job of the utility.
+   */
+  .hide-sm { display: none !important; }
+
+  .page-lead { font-size: 15.5px; }
+  .grid.two { grid-template-columns: minmax(0, 1fr); }
+  /* Full-width actions: a button a thumb has to aim for is a button missed. */
+  .actions-row .btn { flex: 1 1 100%; }
+  .kicker { margin-bottom: var(--space-4); }
+}

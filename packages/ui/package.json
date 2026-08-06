@@ -1,0 +1,23 @@
+{
+  "name": "@plainvote/ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Shared app plumbing for the Plainvote voter and results apps: runtime config, record-keeper selection, hash routing, brand marks",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "19.2.7"
+  },
+  "dependencies": {
+    "@votechain/protocol": "*"
+  }
+}

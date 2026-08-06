@@ -1,0 +1,157 @@
+/*
+ * Results-app extras only. Tokens and shared components come from
+ * @plainvote/theme (imported in main.tsx, before this file).
+ */
+
+.grid > .card { margin-bottom: 0; }
+
+/* Stat tiles on election pages. */
+.stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; }
+.stat .num { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 700; }
+.stat .lbl { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* The public reconciliation row: ballots <= credentials <= eligible. */
+.recon { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0 10px; }
+.recon .cmp { color: var(--muted); font-size: 1.4rem; font-weight: 700; }
+
+/* The result of a question, said before it is drawn. */
+.outcome {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin: 10px 0 4px;
+  text-wrap: balance;
+}
+.outcome .outcome-lead { color: var(--accent); }
+
+/* Hand-rolled SVG result bars. */
+.bar-chart { display: grid; gap: 8px; margin-top: 12px; }
+.bar-row { display: grid; grid-template-columns: minmax(140px, 1.1fr) minmax(0, 2fr) minmax(90px, auto); gap: 12px; align-items: center; }
+.bar-row .bar-label { font-size: 0.92rem; }
+/* The leader, said in words. The darker fill alone carried this, which is a
+   distinction between two greens: no use to a screen reader, and no use to
+   anyone who cannot separate them. */
+.bar-lead-mark {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+.bar-svg { display: block; width: 100%; height: 16px; }
+.bar-track { fill: var(--accent-soft); }
+.bar-fill { fill: var(--accent); transition: width var(--dur-slow) var(--ease); }
+.bar-fill.leader { fill: var(--accent-strong); }
+.bar-value { font-size: 0.82rem; white-space: nowrap; text-align: right; }
+@media (max-width: 620px) {
+  .bar-row { grid-template-columns: minmax(0, 1fr) minmax(90px, auto); }
+  .bar-row .bar-label { grid-column: 1 / -1; margin-bottom: -4px; }
+}
+
+/*
+ * Printing a result.
+ *
+ * A declared result gets printed, tabled at a meeting, and filed. What belongs
+ * on that page is the outcome, the turnout and the reconciliation; what does
+ * not is navigation, a live-status chip, and a button inviting the reader to
+ * run a recount they cannot run on paper. The election id and the page
+ * fingerprint stay, because they are how somebody checks the printout against
+ * the record later.
+ */
+@media print {
+  .app-header,
+  .app-footer,
+  .skip-link,
+  .top-nav,
+  .own-node,
+  .recount-run,
+  .keeper-list,
+  .btn {
+    display: none !important;
+  }
+  body { background: #fff; font-size: 11pt; }
+  main.container { padding: 0; max-width: none; }
+  .card {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 12pt;
+  }
+  .outcome { font-size: 13pt; }
+  .bar-fill { fill: #444 !important; }
+  .bar-fill.leader { fill: #000 !important; }
+  .bar-track { fill: #eee !important; }
+  .chip { border: 1px solid #999; color: #000; background: none; }
+  .stamp { border-color: #000; color: #000; background: none; }
+  a[href^='#']::after { content: ''; }
+}
+
+/* Recount: progress, then a verdict. */
+.recount-run { margin-top: 14px; }
+.recount-step { font-family: var(--font-display); font-weight: 600; font-size: 1rem; margin: 0 0 10px; }
+.recount-bar { height: 8px; border-radius: 6px; background: var(--accent-soft); overflow: hidden; }
+.recount-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 6px;
+  transition: width var(--dur-slow) var(--ease);
+}
+
+.problem-list { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 0.92rem; }
+
+.keeper-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.keeper {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.94rem;
+}
+.keeper:last-child { border-bottom: none; }
+.keeper-name { font-weight: 600; }
+.keeper-said {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+}
+.keeper.agrees .keeper-said { color: var(--ok); }
+.keeper.behind .keeper-said { color: var(--muted); }
+.keeper.differs .keeper-said,
+.keeper.wrong-chain .keeper-said { color: var(--danger); }
+
+/* Naming your own record-keeper: the part that makes agreement mean anything. */
+.own-node { border-top: 1px solid var(--border); margin-top: 16px; }
+.own-node summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 0 0;
+  font-size: 0.92rem;
+  color: var(--accent);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.own-node summary::-webkit-details-marker { display: none; }
+.own-node-body { padding-bottom: 8px; }
+
+pre.mono {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 12px 14px;
+  margin: 10px 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
